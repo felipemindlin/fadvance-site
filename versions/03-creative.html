@@ -56,6 +56,11 @@
   .nav-link:hover{opacity:1; color:var(--gold)}
   .nav-cta{font-family:var(--font-mono); font-size:10px; letter-spacing:0.22em; text-transform:uppercase; padding:10px 18px; border-radius:999px; border:1px solid var(--gold); color:var(--gold); margin-left:8px; transition:background .2s, color .2s}
   .nav-cta:hover{background:var(--gold); color:var(--bg)}
+  .nav-toggle{display:none; flex-direction:column; gap:5px; width:44px; height:44px; align-items:center; justify-content:center; background:transparent; border:0; cursor:pointer; padding:0; margin-right:-8px}
+  .nav-toggle span{display:block; width:24px; height:1.5px; background:var(--gold); transition:transform .25s ease, opacity .2s ease}
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
 
   /* HERO */
   .hero{min-height:100vh; padding:140px 0 80px; position:relative; display:flex; align-items:center}
@@ -166,6 +171,31 @@
     .crit, .hero-grid, .lead, .ref-card, .footer-grid{grid-template-columns:1fr; gap:32px}
     .edge{display:none}
   }
+  @media (max-width:760px){
+    .container{padding:0 24px}
+    .nav-inner{padding:0 24px}
+    .nav-toggle{display:flex}
+    .nav-menu{position:absolute; top:100%; left:0; right:0; flex-direction:column; align-items:stretch; gap:0; background:var(--bg-2); padding:8px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); box-shadow:0 18px 36px -22px rgba(0,0,0,0.6); display:none}
+    .nav-menu.open{display:flex}
+    .nav-link{padding:15px 24px; opacity:0.95}
+    .nav-cta{margin:10px 24px 12px; text-align:center}
+    .hero{min-height:auto; padding:116px 0 64px; overflow:hidden}
+    .hero-display{font-size:clamp(40px, 12.5vw, 60px)}
+    .hero-side{padding-left:0; border-left:0}
+    .section{padding:96px 0}
+    .lead{margin-bottom:64px}
+    .lead .num{font-size:72px}
+    .manifesto{padding:120px 0}
+    .crit{grid-template-columns:1fr}
+    .crit-cell{padding:36px 0 !important; border-right:none !important; min-width:0}
+    .crit-cell + .crit-cell{border-top:1px solid var(--line)}
+    .crit-cell h4{font-size:30px}
+    .ref-card{padding:48px 24px !important; min-width:0}
+    .ref-card .quote-mark{display:none}
+    .footer-display{font-size:clamp(42px, 12vw, 72px)}
+    .strip-meta{gap:16px 24px}
+    .hero-display, .lead h2, .manifesto h2, .footer-display, .crit-cell h4, .pillar h3, .ref-card blockquote, .ref-card .firm .name{overflow-wrap:break-word}
+  }
 </style>
 </head>
 <body>
@@ -183,12 +213,15 @@
       <img class="sym" src="../assets/symbol-gold.svg" alt=""/>
       <span class="name">F/Advance · 2010</span>
     </a>
-    <nav class="nav-menu">
+    <nav class="nav-menu" id="navMenu">
       <a class="nav-link" href="#about">About</a>
       <a class="nav-link" href="#criteria">Criteria</a>
       <a class="nav-link" href="#reference">Reference</a>
       <a class="nav-cta" href="mailto:office@fadvance.com">Get in touch →</a>
     </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
@@ -408,6 +441,19 @@
     });
   }, {threshold:0.35});
   sections.forEach(s => s && eo.observe(s));
+
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+  if(navToggle && navMenu){
+    navToggle.addEventListener('click', () => {
+      const open = navMenu.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      navMenu.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    }));
+  }
 </script>
 
 </body>
