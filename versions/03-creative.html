@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>F/Advance — Building Generational Wealth</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0d1410;
+    --bg-2:#131a15;
+    --paper:#f0ebe1;
+    --ink:#0d1410;
+    --gold:#d9b477;
+    --gold-bright:#e6c896;
+    --green-lt:#3a4a3d;
+    --green:#1f2a22;
+    --line:rgba(217,180,119,0.18);
+    --line-strong:rgba(217,180,119,0.4);
+    --mute:rgba(240,235,225,0.5);
+    --container:1320px;
+    --font-disp:"Fraunces", "Playfair Display", Georgia, serif;
+    --font-sans:"Helvetica Neue", Helvetica, "Inter", system-ui, sans-serif;
+    --font-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  html,body{background:var(--bg); color:var(--paper); font-family:var(--font-sans); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+  body{font-weight:400; font-size:16px; line-height:1.55; overflow-x:hidden}
+  a{color:inherit; text-decoration:none}
+  img{display:block; max-width:100%}
+  .container{max-width:var(--container); margin:0 auto; padding:0 56px}
+  .mono{font-family:var(--font-mono); font-weight:300; font-size:11px; letter-spacing:0.22em; text-transform:uppercase}
+
+  /* edge index — vertical section index left side */
+  .edge{position:fixed; left:24px; top:50%; transform:translateY(-50%); z-index:30; display:flex; flex-direction:column; gap:14px}
+  .edge a{display:flex; align-items:center; gap:10px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--mute); transition:color .25s}
+  .edge a::before{content:""; width:24px; height:1px; background:currentColor; opacity:0.4; transition:width .25s, opacity .25s}
+  .edge a.active, .edge a:hover{color:var(--gold)}
+  .edge a.active::before{width:40px; opacity:1}
+
+  /* GRAIN noise overlay */
+  body::before{content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(255,255,255,0.012) 1px, transparent 1px); background-size:3px 3px; pointer-events:none; z-index:1; mix-blend-mode:overlay}
+
+  /* NAV */
+  .nav{position:fixed; top:0; left:0; right:0; z-index:50; padding:24px 0; transition:background .3s, padding .3s, backdrop-filter .3s}
+  .nav.scrolled{background:rgba(13,20,16,0.78); backdrop-filter:saturate(150%) blur(14px); padding:16px 0; border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; max-width:var(--container); margin:0 auto; padding:0 56px}
+  .brand{display:flex; align-items:center; gap:14px}
+  .brand .sym{width:18px; height:auto}
+  .brand .name{font-family:var(--font-mono); font-size:11px; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold)}
+  .nav-menu{display:flex; gap:8px; align-items:center}
+  .nav-link{font-family:var(--font-mono); font-size:10px; letter-spacing:0.22em; text-transform:uppercase; padding:10px 14px; opacity:0.7; transition:opacity .2s}
+  .nav-link:hover{opacity:1; color:var(--gold)}
+  .nav-cta{font-family:var(--font-mono); font-size:10px; letter-spacing:0.22em; text-transform:uppercase; padding:10px 18px; border-radius:999px; border:1px solid var(--gold); color:var(--gold); margin-left:8px; transition:background .2s, color .2s}
+  .nav-cta:hover{background:var(--gold); color:var(--bg)}
+
+  /* HERO */
+  .hero{min-height:100vh; padding:140px 0 80px; position:relative; display:flex; align-items:center}
+  .hero-grid{display:grid; grid-template-columns:1fr 360px; gap:64px; align-items:end; width:100%}
+  .hero-eyebrow{display:flex; align-items:center; gap:14px; margin-bottom:48px; color:var(--gold)}
+  .hero-eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--gold); animation:pulse 2.2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1; transform:scale(1)} 50%{opacity:0.5; transform:scale(0.7)}}
+  .hero-display{font-family:var(--font-disp); font-weight:300; font-size:clamp(72px, 12vw, 196px); line-height:0.88; letter-spacing:-0.035em; color:var(--paper); margin-bottom:0; font-variation-settings:"opsz" 144}
+  .hero-display .it{font-style:italic; color:var(--gold); font-weight:400}
+  .hero-display .strike{position:relative; display:inline-block; padding-right:0.06em}
+  .hero-side{display:flex; flex-direction:column; gap:32px; padding-left:32px; border-left:1px solid var(--line)}
+  .hero-side p{font-family:var(--font-disp); font-style:italic; font-size:20px; line-height:1.4; color:var(--paper); opacity:0.85; font-weight:300}
+  .hero-stats{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:8px}
+  .hero-stat .v{font-family:var(--font-disp); font-size:42px; line-height:1; color:var(--gold); font-weight:300; letter-spacing:-0.02em}
+  .hero-stat .l{margin-top:8px; color:var(--mute)}
+  .hero-cta{display:flex; gap:12px; margin-top:16px}
+  .btn{display:inline-flex; align-items:center; gap:12px; padding:16px 22px; border-radius:999px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.22em; text-transform:uppercase; transition:all .25s; cursor:pointer; border:1px solid var(--gold); color:var(--gold)}
+  .btn:hover{background:var(--gold); color:var(--bg)}
+  .btn.primary{background:var(--gold); color:var(--bg)}
+  .btn.primary:hover{background:var(--gold-bright); border-color:var(--gold-bright)}
+
+  /* Hero background — giant F symbol */
+  .hero-bg{position:absolute; right:-120px; bottom:-80px; width:780px; opacity:0.05; pointer-events:none; z-index:0}
+  .hero-bg img{width:100%}
+
+  /* hero hairline meta strip */
+  .strip-meta{display:flex; gap:48px; padding:24px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin-top:80px; align-items:center; flex-wrap:wrap}
+  .strip-meta > div{display:flex; align-items:center; gap:10px}
+  .strip-meta .mono{color:var(--mute)}
+  .strip-meta .val{font-family:var(--font-disp); font-style:italic; color:var(--gold); font-size:17px}
+
+  /* SECTION — paper inversion */
+  .section{padding:200px 0; position:relative; z-index:2}
+  .invert{background:var(--paper); color:var(--ink)}
+  .invert .mono{color:rgba(13,20,16,0.5)}
+  .invert .gold{color:#a67d2f}
+  .invert .line{background:rgba(13,20,16,0.14)}
+
+  .lead{display:grid; grid-template-columns:100px 1fr 1fr; gap:48px; margin-bottom:140px; align-items:start}
+  .lead .num{font-family:var(--font-disp); font-style:italic; font-size:120px; line-height:0.8; color:var(--gold); font-weight:300}
+  .lead h2{font-family:var(--font-disp); font-size:clamp(48px, 6.5vw, 96px); line-height:0.96; letter-spacing:-0.025em; font-weight:300; max-width:780px}
+  .lead h2 .it{font-style:italic; color:#a67d2f}
+  .lead .right{padding-top:40px}
+  .lead .right p{font-family:var(--font-disp); font-style:italic; font-size:24px; line-height:1.35; max-width:380px}
+
+  /* ABOUT - asymmetric */
+  .pillars{display:grid; grid-template-columns:repeat(12, 1fr); gap:32px}
+  .pillar{display:flex; flex-direction:column; gap:24px; padding:48px 32px; border-top:1px solid rgba(13,20,16,0.18); position:relative}
+  .p-a{grid-column:1/span 6; margin-top:0}
+  .p-b{grid-column:7/span 6; margin-top:120px}
+  .p-c{grid-column:2/span 5; margin-top:80px}
+  .p-d{grid-column:8/span 5; margin-top:0}
+  .pillar .mono{color:#a67d2f}
+  .pillar h3{font-family:var(--font-disp); font-size:40px; line-height:1.05; letter-spacing:-0.015em; font-weight:300; max-width:380px}
+  .pillar h3 .it{font-style:italic; color:#a67d2f}
+  .pillar p{font-size:16px; line-height:1.55; max-width:380px; color:rgba(13,20,16,0.7)}
+
+  /* MANIFESTO / STRIP */
+  .manifesto{background:var(--bg-2); padding:200px 0; text-align:center; position:relative; overflow:hidden}
+  .manifesto::before{content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 30%, rgba(217,180,119,0.1), transparent 60%)}
+  .manifesto-inner{position:relative; z-index:2; max-width:1100px; margin:0 auto; padding:0 56px}
+  .manifesto h2{font-family:var(--font-disp); font-size:clamp(48px, 7vw, 124px); line-height:0.95; letter-spacing:-0.025em; font-weight:300}
+  .manifesto h2 .it{font-style:italic; color:var(--gold)}
+  .manifesto .quote{font-family:var(--font-disp); font-style:italic; font-size:22px; max-width:600px; margin:48px auto 0; opacity:0.6; line-height:1.4}
+
+  /* CRITERIA */
+  .crit{display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; margin-top:80px; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .crit-cell{padding:64px 32px; border-right:1px solid var(--line); display:flex; flex-direction:column; gap:32px; position:relative; transition:background .25s}
+  .crit-cell:last-child{border-right:none}
+  .crit-cell:hover{background:rgba(217,180,119,0.04)}
+  .crit-cell .mono{color:var(--gold)}
+  .crit-cell h4{font-family:var(--font-disp); font-size:56px; line-height:1; font-weight:300; letter-spacing:-0.02em}
+  .crit-cell h4 .it{font-style:italic; color:var(--gold)}
+  .crit-cell p{font-size:16px; line-height:1.5; opacity:0.7; max-width:280px}
+
+  /* REFERENCES — magazine spread */
+  .ref-spread{margin-top:80px; display:grid; gap:1px; background:var(--line); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .ref-card{background:var(--bg); padding:80px 56px; display:grid; grid-template-columns:300px 1fr; gap:64px; align-items:start; position:relative; transition:background .3s; cursor:pointer}
+  .ref-card:hover{background:var(--bg-2)}
+  .ref-card .firm{display:flex; flex-direction:column; gap:14px}
+  .ref-card .firm .mono{color:var(--gold)}
+  .ref-card .firm .name{font-family:var(--font-disp); font-size:36px; line-height:1; font-weight:300; letter-spacing:-0.01em}
+  .ref-card .firm .name .it{font-style:italic; color:var(--gold)}
+  .ref-card .firm .desc{color:var(--mute); font-size:14px; line-height:1.5}
+  .ref-card .body{position:relative}
+  .ref-card .quote-mark{position:absolute; left:-32px; top:-32px; font-family:var(--font-disp); font-style:italic; font-size:120px; color:var(--gold); opacity:0.4; line-height:1}
+  .ref-card blockquote{font-family:var(--font-disp); font-size:26px; line-height:1.4; font-weight:300; max-width:760px}
+  .ref-card .by{margin-top:32px; display:flex; gap:16px; align-items:center}
+  .ref-card .by .who{font-family:var(--font-disp); font-style:italic; font-size:18px}
+  .ref-card .by .role{color:var(--mute); font-size:14px}
+
+  /* FOOTER */
+  .footer{padding:160px 0 40px; position:relative; overflow:hidden}
+  .footer-display{font-family:var(--font-disp); font-size:clamp(72px, 14vw, 220px); line-height:0.88; letter-spacing:-0.035em; font-weight:300; padding-bottom:80px; border-bottom:1px solid var(--line)}
+  .footer-display .it{font-style:italic; color:var(--gold)}
+  .footer-grid{display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:32px; padding:64px 0; align-items:start}
+  .footer-col h5{font-family:var(--font-mono); font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); font-weight:400; margin-bottom:20px}
+  .footer-col a{display:block; padding:6px 0; font-family:var(--font-disp); font-size:18px; transition:color .2s}
+  .footer-col a:hover{color:var(--gold)}
+  .footer-col p{font-family:var(--font-disp); font-size:18px; line-height:1.5; font-weight:300}
+  .footer-bottom{display:flex; justify-content:space-between; align-items:flex-end; padding-top:40px; border-top:1px solid var(--line); gap:32px}
+  .footer-bottom .mono{color:var(--mute)}
+  .footer-symbol{position:absolute; right:-80px; bottom:-80px; width:600px; opacity:0.04}
+
+  @media (max-width:1024px){
+    .pillars{grid-template-columns:1fr}
+    .p-a,.p-b,.p-c,.p-d{grid-column:1/-1; margin-top:0}
+    .crit, .hero-grid, .lead, .ref-card, .footer-grid{grid-template-columns:1fr; gap:32px}
+    .edge{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav class="edge" id="edge">
+  <a href="#about" data-i="01">About</a>
+  <a href="#criteria" data-i="02">Criteria</a>
+  <a href="#manifesto" data-i="03">Philosophy</a>
+  <a href="#reference" data-i="04">Reference</a>
+</nav>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="brand">
+      <img class="sym" src="../assets/symbol-gold.svg" alt=""/>
+      <span class="name">F/Advance · 2010</span>
+    </a>
+    <nav class="nav-menu">
+      <a class="nav-link" href="#about">About</a>
+      <a class="nav-link" href="#criteria">Criteria</a>
+      <a class="nav-link" href="#reference">Reference</a>
+      <a class="nav-cta" href="mailto:office@fadvance.com">Get in touch →</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true"><img src="../assets/symbol-gold.svg" alt=""/></div>
+  <div class="container" style="position:relative; z-index:2">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">
+          <span class="dot"></span>
+          <span class="mono">Private Equity · Real Estate · Miami</span>
+        </div>
+        <h1 class="hero-display">Building<br/><span class="it">generational</span><br/>wealth.</h1>
+      </div>
+      <aside class="hero-side">
+        <p>"We invest the way we would want our own capital invested — patiently, with intent, and with full alignment."</p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="v">25<span style="font-size:0.55em; color:var(--paper); opacity:0.6">yrs</span></div>
+            <div class="l mono">Experience</div>
+          </div>
+          <div class="hero-stat">
+            <div class="v">2</div>
+            <div class="l mono">Core markets</div>
+          </div>
+          <div class="hero-stat">
+            <div class="v">$30M<span style="font-size:0.5em; color:var(--paper); opacity:0.6">+</span></div>
+            <div class="l mono">Deal ceiling</div>
+          </div>
+          <div class="hero-stat">
+            <div class="v">3</div>
+            <div class="l mono">Asset classes</div>
+          </div>
+        </div>
+        <div class="hero-cta">
+          <a class="btn primary" href="mailto:office@fadvance.com">Contact <span>↗</span></a>
+          <a class="btn" href="#about">About us</a>
+        </div>
+      </aside>
+    </div>
+
+    <div class="strip-meta">
+      <div><span class="mono">EST</span><span class="val">2010</span></div>
+      <div><span class="mono">HQ</span><span class="val">Miami · FL</span></div>
+      <div><span class="mono">FOCUS</span><span class="val">Multifamily · Retail · Industrial</span></div>
+      <div><span class="mono">CHECK</span><span class="val">$5M — $30M+</span></div>
+      <div style="margin-left:auto"><span class="mono">SINCE</span><span class="val">15+ years operating</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="section invert">
+  <div class="container">
+    <div class="lead">
+      <div class="num">01</div>
+      <h2>A private equity real‑estate firm <span class="it">based in Miami.</span></h2>
+      <div class="right">
+        <p>Twenty‑five years of compounding insight across cycles, sectors, and geographies — channeled into a focused, hands‑on approach.</p>
+      </div>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar p-a">
+        <div class="mono">01 · Experience</div>
+        <h3>Across <span class="it">multiple cycles.</span></h3>
+        <p>Our team has over 25 years of real estate investing and capital structure experience.</p>
+      </div>
+      <div class="pillar p-b">
+        <div class="mono">02 · What we do</div>
+        <h3>Commercial real estate, <span class="it">end to end.</span></h3>
+        <p>Acquisitions and management of commercial real estate assets — from sourcing to disposition.</p>
+      </div>
+      <div class="pillar p-c">
+        <div class="mono">03 · Where</div>
+        <h3>Florida &amp; <span class="it">Chile.</span></h3>
+        <p>Primary markets in Florida, US and Santiago de Chile, Chile — two markets we understand deeply.</p>
+      </div>
+      <div class="pillar p-d">
+        <div class="mono">04 · Why</div>
+        <h3>Capital <span class="it">preservation</span> first.</h3>
+        <p>Our philosophy: protect investor capital, then grow it. Every decision begins there.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="manifesto" class="manifesto">
+  <div class="manifesto-inner">
+    <div class="mono" style="color:var(--gold); margin-bottom:48px">Philosophy</div>
+    <h2>Capital preservation. <span class="it">Then growth.</span></h2>
+    <p class="quote">"Our role is to be the careful steward of capital — to compound it through patient, disciplined acquisitions in markets we understand intimately."</p>
+  </div>
+</section>
+
+<section id="criteria" class="section">
+  <div class="container">
+    <div class="lead" style="margin-bottom:80px">
+      <div class="num" style="color:var(--gold)">02</div>
+      <h2 style="color:var(--paper)">What we <span class="it" style="color:var(--gold)">look for.</span></h2>
+      <div class="right">
+        <p style="color:var(--paper); opacity:0.7">Narrow focus, clear thresholds. We move quickly when an opportunity meets the framework.</p>
+      </div>
+    </div>
+
+    <div class="crit">
+      <div class="crit-cell">
+        <div class="mono">A · Asset class</div>
+        <h4>Multifamily, <span class="it">retail,</span> &amp; industrial.</h4>
+        <p>Income‑producing commercial real estate with proven cash flow or clear path to it.</p>
+      </div>
+      <div class="crit-cell">
+        <div class="mono">B · Strategy</div>
+        <h4>Opportunistic <span class="it">to value‑add.</span></h4>
+        <p>Core assets, opportunistic plays, value‑add or reposition — where execution moves the needle.</p>
+      </div>
+      <div class="crit-cell">
+        <div class="mono">C · Deal size</div>
+        <h4>$5M <span class="it">— $30M+</span></h4>
+        <p>Sized to lead or significantly anchor — small enough to add value, large enough to matter.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reference" class="section" style="padding-top:0">
+  <div class="container">
+    <div class="lead" style="margin-bottom:0">
+      <div class="num" style="color:var(--gold)">03</div>
+      <h2 style="color:var(--paper)">What partners <span class="it" style="color:var(--gold)">say.</span></h2>
+      <div class="right">
+        <p style="color:var(--paper); opacity:0.7">Long‑standing relationships across operators and lenders.</p>
+      </div>
+    </div>
+
+    <div class="ref-spread">
+      <a class="ref-card" href="https://www.paz.cl/" target="_blank" rel="noopener">
+        <div class="firm">
+          <span class="mono">Reference 01</span>
+          <img src="../assets/logo-paz.png" alt="PAZ" style="max-height:44px; width:auto; filter:brightness(0) invert(1); opacity:0.9"/>
+          <span class="name">PAZ <span class="it">Corp.</span></span>
+          <span class="desc">Chile · Public real estate developer. Among the largest in Latin America.</span>
+        </div>
+        <div class="body">
+          <span class="quote-mark">"</span>
+          <blockquote>We have been nicely impressed with the firm's level of professionalism and, more importantly, their ability to perform as agreed. We would recommend them for any real estate transaction and regard them as a highly qualified investment company.</blockquote>
+          <div class="by">
+            <div class="who">César Barros Soffia</div>
+            <div class="role">Chief Executive Officer</div>
+          </div>
+        </div>
+      </a>
+      <a class="ref-card" href="https://www.citynational.com/" target="_blank" rel="noopener">
+        <div class="firm">
+          <span class="mono">Reference 02</span>
+          <img src="../assets/logo-cnb.png" alt="City National Bank" style="max-height:44px; width:auto; filter:brightness(0) invert(1); opacity:0.9"/>
+          <span class="name">City National <span class="it">Bank.</span></span>
+          <span class="desc">Florida · Commercial banking. Long‑standing real estate lender.</span>
+        </div>
+        <div class="body">
+          <span class="quote-mark">"</span>
+          <blockquote>I've had the pleasure of working with the team at F/Advance. The team has been nothing but professional and great to work with. We have established a relationship and I look forward to continue growing it.</blockquote>
+          <div class="by">
+            <div class="who">Roberto Pedroso</div>
+            <div class="role">SVP, Real Estate Relationship Manager</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <img class="footer-symbol" src="../assets/symbol-gold.svg" alt="" aria-hidden="true"/>
+  <div class="container" style="position:relative; z-index:2">
+    <div class="footer-display">Let's<br/><span class="it">build together.</span></div>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h5>Office</h5>
+        <p>800 SE 4th Ave<br/>STE 821<br/>Hallandale Beach, FL 33009</p>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <a href="mailto:office@fadvance.com">office@fadvance.com</a>
+        <a href="tel:+13058591363">+1 (305) 859.1363</a>
+      </div>
+      <div class="footer-col">
+        <h5>Connect</h5>
+        <a href="https://www.linkedin.com/company/f-advance-capital/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+      <div class="footer-col">
+        <h5>Sites</h5>
+        <p>Miami · Santiago</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="mono">© F/Advance Capital · MMXXVI</div>
+      <div class="mono">Stewards of generational capital.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  // edge active section
+  const edge = document.querySelectorAll('.edge a');
+  const sections = ['#about', '#criteria', '#manifesto', '#reference'].map(s => document.querySelector(s));
+  const eo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        const id = '#' + e.target.id;
+        edge.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      }
+    });
+  }, {threshold:0.35});
+  sections.forEach(s => s && eo.observe(s));
+</script>
+
+</body>
+</html>

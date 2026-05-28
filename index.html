@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>F/Advance — 4 direcciones</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@300;400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0d1410;
+    --paper:#f0ebe1;
+    --ink:#1c211d;
+    --gold:#d9b477;
+    --green:#3d4a3f;
+    --mute:rgba(240,235,225,0.55);
+    --line:rgba(240,235,225,0.14);
+    --font-disp:"Instrument Serif", Georgia, serif;
+    --font-sans:"Inter", "Helvetica Neue", system-ui, sans-serif;
+    --font-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{background:var(--bg); color:var(--paper); font-family:var(--font-sans); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+  body{font-size:15px; line-height:1.5; min-height:100vh}
+  a{color:inherit; text-decoration:none}
+  .mono{font-family:var(--font-mono); font-size:11px; letter-spacing:0.22em; text-transform:uppercase}
+
+  .wrap{max-width:1480px; margin:0 auto; padding:48px 40px 96px}
+
+  /* HEADER */
+  .head{display:flex; align-items:flex-start; justify-content:space-between; gap:48px; padding-bottom:48px; border-bottom:1px solid var(--line); margin-bottom:64px}
+  .head-left{display:flex; gap:24px; align-items:flex-start}
+  .head-left .sym{width:28px; height:auto; margin-top:6px}
+  .head-left h1{font-family:var(--font-disp); font-size:64px; line-height:0.98; font-weight:400; letter-spacing:-0.02em}
+  .head-left h1 .it{font-style:italic; color:var(--gold)}
+  .head-left .sub{margin-top:14px; color:var(--mute); max-width:560px; font-size:15px; line-height:1.5}
+  .head-right{text-align:right; display:flex; flex-direction:column; gap:8px}
+  .head-right .mono{color:var(--gold)}
+  .head-right .when{color:var(--mute)}
+
+  /* legend */
+  .legend{display:flex; gap:32px; margin-bottom:32px; flex-wrap:wrap; align-items:center}
+  .legend .pill{display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border:1px solid var(--line); border-radius:999px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--paper); opacity:0.85}
+  .legend .pill .dot{width:6px; height:6px; border-radius:50%; background:var(--gold)}
+
+  /* grid */
+  .grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:32px}
+  .card{position:relative; border:1px solid var(--line); border-radius:6px; overflow:hidden; display:flex; flex-direction:column; transition:border-color .25s, transform .35s cubic-bezier(.2,.7,.2,1)}
+  .card:hover{border-color:var(--gold); transform:translateY(-4px)}
+  .card-head{display:flex; align-items:flex-start; justify-content:space-between; padding:24px 28px 16px; gap:16px}
+  .card-meta{display:flex; flex-direction:column; gap:8px}
+  .card-meta .num{font-family:var(--font-mono); font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:var(--mute)}
+  .card-meta .name{font-family:var(--font-disp); font-size:36px; line-height:1; font-weight:400; letter-spacing:-0.01em}
+  .card-meta .name .it{font-style:italic; color:var(--gold)}
+  .card-meta .desc{color:var(--mute); margin-top:10px; max-width:480px; font-size:14px; line-height:1.5}
+  .tags{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; max-width:200px}
+  .tag{font-family:var(--font-mono); font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--mute); border:1px solid var(--line); padding:5px 9px; border-radius:999px; white-space:nowrap}
+
+  .preview{position:relative; aspect-ratio:16/10; margin:0 12px 12px; background:#fff; border-radius:4px; overflow:hidden}
+  .preview iframe{position:absolute; top:0; left:0; width:200%; height:200%; border:0; transform:scale(0.5); transform-origin:0 0; pointer-events:none}
+  .preview .scrim{position:absolute; inset:0; background:linear-gradient(to bottom, transparent 70%, rgba(13,20,16,0.95)); pointer-events:none}
+  .preview .open{position:absolute; right:16px; bottom:16px; padding:10px 16px; background:var(--paper); color:var(--ink); border-radius:999px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.22em; text-transform:uppercase; display:inline-flex; align-items:center; gap:8px; transition:background .2s, transform .2s}
+  .card:hover .open{background:var(--gold)}
+  .preview .badge{position:absolute; left:16px; top:16px; padding:6px 10px; background:rgba(13,20,16,0.9); color:var(--gold); font-family:var(--font-mono); font-size:9px; letter-spacing:0.22em; text-transform:uppercase; border-radius:999px}
+
+  .card-foot{display:flex; justify-content:space-between; align-items:center; padding:14px 28px 22px; gap:16px}
+  .card-foot .mono{color:var(--mute)}
+  .pal{display:flex; gap:6px}
+  .swatch{width:14px; height:14px; border-radius:50%; border:1px solid rgba(255,255,255,0.18)}
+
+  /* notes */
+  .notes{margin-top:64px; padding:32px; border:1px solid var(--line); border-radius:6px; display:grid; grid-template-columns:1fr 2fr; gap:48px}
+  .notes h3{font-family:var(--font-disp); font-size:28px; line-height:1; font-weight:400; margin-bottom:12px}
+  .notes .mono{color:var(--gold); margin-bottom:18px}
+  .notes p{color:var(--mute); font-size:14px; line-height:1.6; max-width:680px}
+  .notes ul{color:var(--paper); font-size:14px; line-height:1.7; margin-top:16px; padding-left:0; list-style:none}
+  .notes li{padding-left:24px; position:relative}
+  .notes li::before{content:"→"; position:absolute; left:0; color:var(--gold)}
+
+  @media (max-width: 900px){
+    .grid{grid-template-columns:1fr}
+    .head{flex-direction:column}
+    .notes{grid-template-columns:1fr}
+    .head-left h1{font-size:44px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="head">
+    <div class="head-left">
+      <img class="sym" src="assets/symbol-gold.svg" alt=""/>
+      <div>
+        <h1>F/Advance — <span class="it">four directions</span></h1>
+        <p class="sub">Recreación del sitio archivado de Wayback Machine, en cuatro versiones para comparar. Todas usan el mismo contenido y los mismos activos de marca (logo, símbolo F, paleta del brandbook).</p>
+      </div>
+    </div>
+    <div class="head-right">
+      <div class="mono">Brief</div>
+      <div class="when">Recreate fadvance.com</div>
+      <div class="when">4 design directions</div>
+    </div>
+  </header>
+
+  <div class="legend">
+    <span class="mono" style="color:var(--gold)">Paleta del brandbook</span>
+    <span class="pill"><span class="dot" style="background:#d9b477"></span>Gold #D9B477</span>
+    <span class="pill"><span class="dot" style="background:#556052"></span>Green #556052</span>
+    <span class="pill"><span class="dot" style="background:#ffffff"></span>White</span>
+    <span class="pill"><span class="dot" style="background:#1a1f1c"></span>Ink #1A1F1C</span>
+    <span class="pill"><span class="dot" style="background:#f0ebe1"></span>Bone #F0EBE1</span>
+  </div>
+
+  <section class="grid">
+
+    <a class="card" href="versions/01-original.html">
+      <div class="card-head">
+        <div class="card-meta">
+          <div class="num">01 — Original</div>
+          <div class="name">Faithful <span class="it">recreation.</span></div>
+          <div class="desc">Misma estructura, tipografía y paleta del sitio archivado. Inter, blanco + acento dorado, hero split, cards de criterio con borde fino. Lista para reemplazar imágenes por las originales.</div>
+        </div>
+        <div class="tags">
+          <span class="tag">Inter</span>
+          <span class="tag">White</span>
+          <span class="tag">1:1 Wayback</span>
+        </div>
+      </div>
+      <div class="preview">
+        <span class="badge">Live preview</span>
+        <iframe src="versions/01-original.html" title="V1"></iframe>
+        <span class="scrim"></span>
+        <span class="open">Open V1 <span>↗</span></span>
+      </div>
+      <div class="card-foot">
+        <span class="mono">Inter · Light + Gold</span>
+        <div class="pal">
+          <span class="swatch" style="background:#ffffff"></span>
+          <span class="swatch" style="background:#1a1f1c"></span>
+          <span class="swatch" style="background:#d9b477"></span>
+          <span class="swatch" style="background:#556052"></span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="versions/02-modern.html">
+      <div class="card-head">
+        <div class="card-meta">
+          <div class="num">02 — Modern & refined</div>
+          <div class="name">Editorial <span class="it">redux.</span></div>
+          <div class="desc">Helvética + Instrument Serif. Fondo color hueso, números de sección grandes, pillars con borde divisor, criterios como tabla, references como filas magazine. Más respirado y más editorial.</div>
+        </div>
+        <div class="tags">
+          <span class="tag">Helv. Neue</span>
+          <span class="tag">Serif accent</span>
+          <span class="tag">Bone</span>
+        </div>
+      </div>
+      <div class="preview">
+        <span class="badge">Live preview</span>
+        <iframe src="versions/02-modern.html" title="V2"></iframe>
+        <span class="scrim"></span>
+        <span class="open">Open V2 <span>↗</span></span>
+      </div>
+      <div class="card-foot">
+        <span class="mono">Helv. Neue + Instrument Serif</span>
+        <div class="pal">
+          <span class="swatch" style="background:#f4f1ec"></span>
+          <span class="swatch" style="background:#1c211d"></span>
+          <span class="swatch" style="background:#c79a55"></span>
+          <span class="swatch" style="background:#3d4a3f"></span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="versions/03-creative.html">
+      <div class="card-head">
+        <div class="card-meta">
+          <div class="num">03 — Mi favorita</div>
+          <div class="name">Dark <span class="it">luxury.</span></div>
+          <div class="desc">Fondo oscuro (verde profundo), Fraunces como tipo display, símbolo F gigante de fondo, pillars asimétricos, manifesto a pantalla completa, references como spread editorial. Lectura de firma de capital privado premium.</div>
+        </div>
+        <div class="tags">
+          <span class="tag">Fraunces</span>
+          <span class="tag">Dark</span>
+          <span class="tag">Bold</span>
+        </div>
+      </div>
+      <div class="preview">
+        <span class="badge">Live preview</span>
+        <iframe src="versions/03-creative.html" title="V3"></iframe>
+        <span class="scrim"></span>
+        <span class="open">Open V3 <span>↗</span></span>
+      </div>
+      <div class="card-foot">
+        <span class="mono">Fraunces + Helvetica</span>
+        <div class="pal">
+          <span class="swatch" style="background:#0d1410"></span>
+          <span class="swatch" style="background:#f0ebe1"></span>
+          <span class="swatch" style="background:#d9b477"></span>
+          <span class="swatch" style="background:#1f2a22"></span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="versions/04-original-plus.html">
+      <div class="card-head">
+        <div class="card-meta">
+          <div class="num">04 — Original + variations</div>
+          <div class="name">Same DNA, <span class="it">more life.</span></div>
+          <div class="desc">Base idéntica a V1 con capa de interactividad: marquee superior, spotlight que sigue al cursor en el hero, parallax sutil, botón magnético, sparkles al hacer click en la estrella, strip de stats con conteo animado, hover lift en cards y F dorada con sombra.</div>
+        </div>
+        <div class="tags">
+          <span class="tag">Interactive</span>
+          <span class="tag">Parallax</span>
+          <span class="tag">+Marquee</span>
+        </div>
+      </div>
+      <div class="preview">
+        <span class="badge">Live preview</span>
+        <iframe src="versions/04-original-plus.html" title="V4"></iframe>
+        <span class="scrim"></span>
+        <span class="open">Open V4 <span>↗</span></span>
+      </div>
+      <div class="card-foot">
+        <span class="mono">V1 base + motion layer</span>
+        <div class="pal">
+          <span class="swatch" style="background:#ffffff"></span>
+          <span class="swatch" style="background:#1a1f1c"></span>
+          <span class="swatch" style="background:#d9b477"></span>
+          <span class="swatch" style="background:#556052"></span>
+        </div>
+      </div>
+    </a>
+
+  </section>
+
+  <section class="notes">
+    <div>
+      <div class="mono">Notas</div>
+      <h3>Antes de avanzar</h3>
+    </div>
+    <div>
+      <p>Las cuatro versiones comparten contenido y branding. Las diferencias están en sistema tipográfico, paleta dominante e interacción.</p>
+      <ul>
+        <li><strong>Imágenes:</strong> el hero usa un placeholder rayado. No tenemos la foto del skyline original de Wayback — cuando me pasen la imagen real (o stock que les guste) reemplazo en las cuatro.</li>
+        <li><strong>Logos de referencias:</strong> PAZ y City National Bank están como tratamiento tipográfico hasta que tengamos los SVG limpios.</li>
+        <li><strong>Helvetica Neue:</strong> V2 y V3 piden Helvetica Neue. Donde el usuario no la tenga instalada, el browser cae a Helvetica → Inter (look casi idéntico).</li>
+        <li><strong>Texto:</strong> mantuve el del sitio archivado. Si quieren cambiar 25 → 40 años (el doc de Content dice 40), agregar Track Record, Team o Press, lo sumamos en la siguiente ronda.</li>
+        <li><strong>Próxima ronda:</strong> elegir 1–2 direcciones, traer imágenes reales y refinar. También puedo mezclar (ej. layout de V1 con tipografía de V2).</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+<svg viewBox="0 0 1440 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <g fill="#D9B477">
+    <path d="M520 80 L920 80 L920 220 C760 250, 600 290, 460 340 L460 250 L720 230 L720 180 L460 180 Z"></path>
+    <path d="M460 380 C600 330, 760 290, 920 270 L920 410 C760 430, 600 460, 460 510 L460 420 L720 400 L720 350 L460 360 Z"></path>
+  </g>
+</svg>

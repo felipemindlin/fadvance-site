@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>F/Advance — Building Generational Wealth</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bone:#f4f1ec;
+    --paper:#ebe6dd;
+    --ink:#1c211d;
+    --ink-soft:#5c635d;
+    --muted:#8c9089;
+    --line:rgba(28,33,29,0.14);
+    --gold:#c79a55;
+    --gold-soft:#d9b477;
+    --green:#3d4a3f;
+    --green-deep:#262e27;
+    --container:1280px;
+    --font-sans:"Helvetica Neue", Helvetica, "Inter", system-ui, sans-serif;
+    --font-serif:"Instrument Serif", Georgia, "Times New Roman", serif;
+    --font-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  html,body{background:var(--bone); color:var(--ink); font-family:var(--font-sans); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+  body{font-weight:400; font-size:16px; line-height:1.5}
+  a{color:inherit; text-decoration:none}
+  img{display:block; max-width:100%}
+  .container{max-width:var(--container); margin:0 auto; padding:0 40px}
+  .mono{font-family:var(--font-mono); font-weight:400; font-size:11px; letter-spacing:0.18em; text-transform:uppercase}
+
+  /* progress bar */
+  .progress{position:fixed; top:0; left:0; height:1px; background:var(--gold); z-index:100; width:0%; transition:width .1s linear}
+
+  /* NAV */
+  .nav{position:sticky; top:0; z-index:60; background:rgba(244,241,236,0.86); backdrop-filter:saturate(150%) blur(10px); border-bottom:1px solid transparent; transition:border-color .3s}
+  .nav.scrolled{border-bottom-color:var(--line)}
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; height:80px; max-width:var(--container); margin:0 auto; padding:0 40px}
+  .brand{display:flex; align-items:center; gap:14px}
+  .brand .sym{width:14px; height:auto}
+  .brand .name{font-family:var(--font-mono); font-size:12px; letter-spacing:0.22em; text-transform:uppercase}
+  .nav-menu{display:flex; gap:8px; align-items:center}
+  .nav-link{font-family:var(--font-mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; padding:10px 16px; border-radius:999px; transition:background .2s, color .2s}
+  .nav-link:hover{background:var(--ink); color:var(--bone)}
+  .nav-cta{font-family:var(--font-mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; padding:10px 18px; border-radius:999px; border:1px solid var(--ink); margin-left:8px; transition:background .2s, color .2s}
+  .nav-cta:hover{background:var(--ink); color:var(--bone)}
+
+  /* HERO */
+  .hero{padding:64px 0 32px; position:relative}
+  .hero-meta{display:flex; gap:48px; padding-bottom:32px; border-bottom:1px solid var(--line); margin-bottom:64px; align-items:flex-start}
+  .hero-meta > div{flex:1}
+  .hero-meta .mono{color:var(--muted)}
+  .hero-meta .meta-val{font-family:var(--font-serif); font-size:18px; line-height:1.35; margin-top:8px; color:var(--ink)}
+  .hero-display{font-family:var(--font-serif); font-weight:400; font-size:clamp(64px, 11vw, 168px); line-height:0.92; letter-spacing:-0.02em; color:var(--ink); margin-bottom:48px}
+  .hero-display .it{font-style:italic; color:var(--gold)}
+  .hero-foot{display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:end; padding-top:32px; border-top:1px solid var(--line)}
+  .hero-lede{font-family:var(--font-serif); font-size:22px; line-height:1.4; max-width:440px; color:var(--ink-soft); font-style:italic}
+  .hero-actions{display:flex; gap:12px; justify-content:flex-end; align-items:center}
+  .btn{display:inline-flex; align-items:center; gap:12px; padding:18px 24px; border-radius:999px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.22em; text-transform:uppercase; transition:all .25s ease; cursor:pointer; border:1px solid var(--ink)}
+  .btn.primary{background:var(--ink); color:var(--bone)}
+  .btn.primary:hover{background:var(--gold); border-color:var(--gold); color:var(--ink)}
+  .btn.ghost{background:transparent}
+  .btn.ghost:hover{background:var(--ink); color:var(--bone)}
+  .btn .arrow{transition:transform .25s}
+  .btn:hover .arrow{transform:translateX(4px)}
+
+  .hero-image{margin-top:80px; aspect-ratio:16/7; overflow:hidden; border-radius:2px; position:relative; background:#10120f}
+  .hero-image img{width:100%; height:100%; object-fit:cover}
+  .hero-tag{position:absolute; bottom:24px; left:24px; color:var(--bone); display:flex; gap:24px; align-items:flex-end}
+  .hero-tag .mono{opacity:0.7}
+  .hero-tag h4{font-family:var(--font-serif); font-style:italic; font-size:24px; font-weight:400}
+
+  /* SECTION */
+  .section{padding:160px 0; position:relative}
+  .section-head{display:grid; grid-template-columns:120px 1fr 1fr; gap:32px; padding-bottom:80px; border-bottom:1px solid var(--line); margin-bottom:80px; align-items:end}
+  .section-num{font-family:var(--font-serif); font-style:italic; font-size:64px; color:var(--gold); line-height:1}
+  .section-title{font-family:var(--font-serif); font-size:64px; line-height:1; letter-spacing:-0.02em; font-weight:400}
+  .section-kicker{font-family:var(--font-serif); font-style:italic; font-size:20px; line-height:1.4; color:var(--ink-soft); max-width:380px}
+
+  /* ABOUT */
+  .pillars{display:grid; grid-template-columns:repeat(2, 1fr); gap:0; border-top:1px solid var(--line)}
+  .pillar{padding:48px 0 48px; border-bottom:1px solid var(--line); display:grid; grid-template-columns:120px 1fr; gap:32px; align-items:start}
+  .pillar:nth-child(odd){padding-right:48px; border-right:1px solid var(--line)}
+  .pillar:nth-child(even){padding-left:48px}
+  .pillar .mono{color:var(--gold); padding-top:6px}
+  .pillar h3{font-family:var(--font-serif); font-size:28px; line-height:1.15; font-weight:400; letter-spacing:-0.005em; margin-bottom:14px}
+  .pillar p{color:var(--ink-soft); font-size:16px; line-height:1.55; max-width:380px}
+
+  /* SHOWCASE STRIP */
+  .strip{background:var(--green-deep); color:var(--bone); padding:120px 0; margin:0; overflow:hidden}
+  .strip-grid{display:grid; grid-template-columns:1fr 1fr; gap:96px; align-items:center}
+  .strip h2{font-family:var(--font-serif); font-size:72px; line-height:1; letter-spacing:-0.02em; font-weight:400}
+  .strip h2 .it{font-style:italic; color:var(--gold)}
+  .strip p{font-family:var(--font-serif); font-size:22px; line-height:1.4; margin-top:32px; color:rgba(244,241,236,0.7); max-width:500px; font-style:italic}
+  .strip-symbol{display:flex; justify-content:center}
+  .strip-symbol img{width:240px; height:auto; opacity:0.95}
+
+  /* CRITERIA */
+  .crit-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:0; border-top:1px solid var(--line)}
+  .crit-card{padding:56px 40px; border-bottom:1px solid var(--line); border-right:1px solid var(--line); position:relative; display:flex; flex-direction:column; gap:48px; min-height:300px; transition:background .25s}
+  .crit-card:last-child{border-right:none}
+  .crit-card:hover{background:var(--paper)}
+  .crit-card .mono{color:var(--muted)}
+  .crit-card h4{font-family:var(--font-serif); font-size:32px; line-height:1.1; font-weight:400; letter-spacing:-0.01em}
+  .crit-card .v{font-family:var(--font-serif); font-style:italic; font-size:18px; color:var(--gold)}
+
+  /* REFERENCES */
+  .ref-stack{display:grid; gap:0; border-top:1px solid var(--line)}
+  .ref-row{display:grid; grid-template-columns:200px 1fr 100px; gap:48px; padding:64px 0; border-bottom:1px solid var(--line); align-items:start; cursor:pointer; transition:padding .3s}
+  .ref-row:hover{padding-left:24px}
+  .ref-firm{font-family:var(--font-serif); font-size:24px; font-style:italic}
+  .ref-firm .role{display:block; font-family:var(--font-mono); font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-style:normal; margin-top:8px}
+  .ref-quote{font-family:var(--font-serif); font-size:24px; line-height:1.35; font-style:italic; max-width:760px}
+  .ref-byline{font-family:var(--font-mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-top:16px}
+  .ref-arrow{justify-self:end; align-self:start; opacity:0; transform:translateX(-12px); transition:opacity .25s, transform .25s}
+  .ref-row:hover .ref-arrow{opacity:1; transform:translateX(0)}
+
+  /* FOOTER */
+  .footer{background:var(--ink); color:var(--bone); padding:120px 0 40px; margin-top:0}
+  .footer-display{font-family:var(--font-serif); font-size:clamp(56px, 9vw, 132px); line-height:0.95; letter-spacing:-0.02em; padding-bottom:80px; border-bottom:1px solid rgba(244,241,236,0.18)}
+  .footer-display .it{font-style:italic; color:var(--gold)}
+  .footer-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:32px; padding:64px 0; align-items:start}
+  .footer-col h5{font-family:var(--font-mono); font-size:10px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5; font-weight:400; margin-bottom:20px}
+  .footer-col a{display:block; padding:4px 0; font-family:var(--font-serif); font-size:18px; opacity:0.95; transition:color .2s}
+  .footer-col a:hover{color:var(--gold)}
+  .footer-col p{font-family:var(--font-serif); font-size:18px; opacity:0.95; line-height:1.5}
+  .footer-bottom{display:flex; justify-content:space-between; align-items:flex-end; padding-top:40px; border-top:1px solid rgba(244,241,236,0.18); gap:32px}
+  .footer-bottom .mono{opacity:0.5}
+
+  @media (max-width: 900px){
+    .hero-foot, .pillars, .section-head, .crit-grid, .ref-row, .footer-grid, .strip-grid{grid-template-columns:1fr; gap:24px}
+    .section-head{padding-bottom:32px; margin-bottom:32px}
+    .pillar{grid-template-columns:1fr; padding:32px 0!important; border-right:none!important}
+    .ref-arrow{display:none}
+    .nav-link{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="brand">
+      <img class="sym" src="../assets/symbol-dark.svg" alt=""/>
+      <span class="name">F/Advance Capital</span>
+    </a>
+    <nav class="nav-menu">
+      <a class="nav-link" href="#about">About</a>
+      <a class="nav-link" href="#criteria">Criteria</a>
+      <a class="nav-link" href="#reference">Reference</a>
+      <a class="nav-cta" href="mailto:office@fadvance.com">Contact →</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-meta">
+      <div>
+        <div class="mono">Est. 2010 · Miami, FL</div>
+        <div class="meta-val">Private equity real estate</div>
+      </div>
+      <div>
+        <div class="mono">Markets</div>
+        <div class="meta-val">Florida, US &nbsp;·&nbsp; Santiago, CL</div>
+      </div>
+      <div>
+        <div class="mono">Deal range</div>
+        <div class="meta-val">$5M — $30M+</div>
+      </div>
+    </div>
+
+    <h1 class="hero-display">Value‑driven<br/>real estate<br/><span class="it">investors.</span></h1>
+
+    <div class="hero-foot">
+      <p class="hero-lede">Building generational wealth through disciplined acquisitions and active management of commercial real estate.</p>
+      <div class="hero-actions">
+        <a class="btn ghost" href="#about">
+          <span>About us</span>
+        </a>
+        <a class="btn primary" href="mailto:office@fadvance.com">
+          <span>Get in touch</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <img src="../assets/hero-photo.png" alt=""/>
+      <div class="hero-tag">
+        <div>
+          <div class="mono">Featured</div>
+          <h4>Multifamily · South Florida</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">01</div>
+      <div>
+        <div class="mono" style="color:var(--muted); margin-bottom:24px">About</div>
+        <h2 class="section-title">A firm built on <em style="color:var(--gold)">discipline.</em></h2>
+      </div>
+      <p class="section-kicker">Twenty‑five years of compounding insight across cycles, sectors, and geographies — channeled into a focused, hands‑on approach.</p>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="mono">01 — Experience</div>
+        <div>
+          <h3>25+ years across cycles.</h3>
+          <p>Our team has over 25 years of real estate investing and capital structure experience.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="mono">02 — What we do</div>
+        <div>
+          <h3>Commercial real estate, end to end.</h3>
+          <p>Acquisitions and management of commercial real estate assets — from sourcing to disposition.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="mono">03 — Where</div>
+        <div>
+          <h3>Florida &amp; Chile.</h3>
+          <p>Primary markets in Florida, US and Santiago de Chile, Chile — two markets we understand deeply.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="mono">04 — Why</div>
+        <div>
+          <h3>Capital preservation, first.</h3>
+          <p>Our philosophy: protect investor capital, then grow it. Every decision begins there.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="strip">
+  <div class="container">
+    <div class="strip-grid">
+      <div>
+        <div class="mono" style="color:var(--gold); margin-bottom:24px">Philosophy</div>
+        <h2>Capital preservation. <span class="it">Then growth.</span></h2>
+        <p>We invest the way we'd want our own capital invested — patiently, with intent, and with full alignment.</p>
+      </div>
+      <div class="strip-symbol">
+        <img src="../assets/symbol-gold.svg" alt=""/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="criteria" class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">02</div>
+      <div>
+        <div class="mono" style="color:var(--muted); margin-bottom:24px">Investment Criteria</div>
+        <h2 class="section-title">What we look <em style="color:var(--gold)">for.</em></h2>
+      </div>
+      <p class="section-kicker">Narrow focus, clear thresholds. We move quickly when an opportunity meets the framework.</p>
+    </div>
+
+    <div class="crit-grid">
+      <div class="crit-card">
+        <div class="mono">A · Asset class</div>
+        <h4>Multifamily, retail, &amp; industrial properties.</h4>
+        <div class="v">Income‑producing commercial real estate.</div>
+      </div>
+      <div class="crit-card">
+        <div class="mono">B · Strategy</div>
+        <h4>Opportunistic, core, value‑add or reposition.</h4>
+        <div class="v">Where execution moves the needle.</div>
+      </div>
+      <div class="crit-card">
+        <div class="mono">C · Deal size</div>
+        <h4>$5M&nbsp;—&nbsp;$30M+</h4>
+        <div class="v">Sized to lead or significantly anchor.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reference" class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">03</div>
+      <div>
+        <div class="mono" style="color:var(--muted); margin-bottom:24px">Reference</div>
+        <h2 class="section-title">What partners <em style="color:var(--gold)">say.</em></h2>
+      </div>
+      <p class="section-kicker">Long‑standing relationships across operators and lenders.</p>
+    </div>
+
+    <div class="ref-stack">
+      <a class="ref-row" href="https://www.paz.cl/" target="_blank" rel="noopener">
+        <div class="ref-firm"><img src="../assets/logo-paz.png" alt="PAZ" style="max-height:40px; width:auto; margin-bottom:14px; display:block; opacity:0.85"/>PAZ Corp.<span class="role">Chile · Real Estate</span></div>
+        <div>
+          <p class="ref-quote">"We have been nicely impressed with the firm's level of professionalism and, more importantly, their ability to perform as agreed. We would recommend them for any real estate transaction and regard them as a highly qualified investment company."</p>
+          <div class="ref-byline">Cesar Barros Soffia — Chief Executive Officer</div>
+        </div>
+        <div class="ref-arrow mono">View →</div>
+      </a>
+      <a class="ref-row" href="https://www.citynational.com/" target="_blank" rel="noopener">
+        <div class="ref-firm"><img src="../assets/logo-cnb.png" alt="City National Bank" style="max-height:40px; width:auto; margin-bottom:14px; display:block; opacity:0.85"/>City National Bank<span class="role">Florida · Banking</span></div>
+        <div>
+          <p class="ref-quote">"I've had the pleasure of working with the team at F/Advance. The team has been nothing but professional and great to work with. We have established a relationship and I look forward to continue growing it."</p>
+          <div class="ref-byline">Roberto Pedroso — SVP, Real Estate Relationship Manager</div>
+        </div>
+        <div class="ref-arrow mono">View →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-display">Let's build <span class="it">together.</span></div>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h5>Office</h5>
+        <p>800 SE 4th Ave<br/>STE 821<br/>Hallandale Beach, FL 33009</p>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <a href="mailto:office@fadvance.com">office@fadvance.com</a>
+        <a href="tel:+13058591363">+1 (305) 859.1363</a>
+      </div>
+      <div class="footer-col">
+        <h5>Connect</h5>
+        <a href="https://www.linkedin.com/company/f-advance-capital/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+      <div class="footer-col" style="display:flex; justify-content:flex-end">
+        <img src="../assets/symbol-gold.svg" alt="" style="width:48px; height:auto"/>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="mono">© F/Advance Capital · 2026</div>
+      <div class="mono">Miami · Santiago</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  const progress = document.getElementById('progress');
+  const onScroll = () => {
+    nav.classList.toggle('scrolled', window.scrollY > 8);
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    progress.style.width = pct + '%';
+  };
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+</script>
+
+</body>
+</html>

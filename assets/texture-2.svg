@@ -1,0 +1,9 @@
+<svg viewBox="0 0 558 558" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="t2" width="28" height="28" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="28" height="28" fill="#556052"></rect>
+      <rect width="2" height="28" fill="#D9B477" opacity="0.45"></rect>
+    </pattern>
+  </defs>
+  <rect width="558" height="558" fill="url(#t2)"></rect>
+</svg>
